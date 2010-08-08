@@ -35,16 +35,15 @@ var DropUp = (function() {
     function out(req, res) { 
         routes.route(req, res, [
             ["^/$", function() { serveFile(res, "/index.html"); }],
-            ["^(/[a-z.]*.(js|css))$",    serveStatic],
-            ["^/upload$",             uploadFile],
+            ["^/upload$",                  uploadFile],
             ["^/([a-z0-9]{12}.png.html)$", serveImgPage],
-            ["^/([a-z0-9]{12}).png$", serveImg],
-            ["[\w\W]*",               serve404]
+            ["^/([a-z0-9]{12}).png$",      serveImg],
+            ["([\w\W]*)",                  serveStatic]
         ]);
     };
 
     function serveStatic(req, res, rest) { 
-        serveFile(res, rest);
+        serveFile(res, req.url);
     };
 
     function serveImg(req, res) { 

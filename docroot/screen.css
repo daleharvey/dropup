@@ -3,15 +3,31 @@
     padding:0px; 
     border:0px; 
 } 
-html, body { 
-    height:100%; 
-}
+/* html, body {  */
+/*     height:100%;  */
+/* } */
 body {
     font:14px/1.7 Verdana,Tahoma,sans-serif;
-    background:#000;
-    /*background-image: -moz-radial-gradient(center 0deg, circle cover, #150e5b 0%, #000 100%);*/
+    background:#111;
+    /* background-image: -moz-radial-gradient(center 0deg, circle cover, #111 0%, #000 100%); */
     color:#eee; 
-} 
+}
+
+header { display:block; margin:10px; position:relative; }
+ 
+h1 { 
+    font-family: ChunkFiveRegular;
+    font-size:250%;
+    line-height:120%;
+    text-shadow: #000 1px 1px 2px; 
+    float:left;
+}
+
+h1 span {
+    color:#DDD; 
+}
+
+
 ul { 
     list-style-type:none; 
 }
@@ -24,19 +40,23 @@ ul {
     position:relative; 
 }
 .uploading img, .loaded img { 
-    max-height:200px; 
-    max-width:300px; 
+    max-height:130px; 
+    max-width:200px; 
     opacity: 0.1; 
+}
+
+.uploading p, .loaded p { 
+    text-align:center;
 }
 
 .wrapper { 
     text-align:center;  
-    width:300px; 
-    height: 200px;     
+    width:200px; 
+    height: 130px;     
     overflow:hidden; 
  }
-.loading { background:#000; width: 280px; margin:0px 10px; 
-           position:absolute; bottom: 120px; height:5px; }
+.loading { background:#000; width: 180px; margin:0px 10px; 
+           position:absolute; bottom: 60px; height:5px; }
 
 .loaded img { opacity:1; }
 .loaded .loading { display:none; }
@@ -52,7 +72,7 @@ a { text-decoration:none; color:orange; font-size:90%; }
     font-size:70%;
     color:#555; 
 }
-.label input { 
+#embed { 
     background:#333;
     color:white;
     padding: 4px; 
@@ -62,3 +82,21 @@ a { text-decoration:none; color:orange; font-size:90%; }
 #embed { width: 300px; }
     
 .progress { height:100%; background:#BBB; }
+
+#original { position:absolute; bottom:5px; right:10px; } 
+
+#wrapper { padding: 0px 10px; }
+
+#warnings { color:#666; font-size:80%; }
+
+.clearfix:after {clear: both;
+content: '.';
+display: block;
+visibility: hidden;
+height: 0;}
+
+.clearfix {display: inline-block;}
+
+* html .clearfix {height: 1%;}
+
+.clearfix {display: block;}

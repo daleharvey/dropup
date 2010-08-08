@@ -3,33 +3,25 @@
   <head>
     <meta charset="utf-8" />
     <title>dropup.net</title>    
+    <link rel="stylesheet" href="/ChunkFive/stylesheet.css" />
     <link rel="stylesheet" href="/screen.css" />
   </head>
 
   <body>
 
-    <div style="margin:10px;overflow:auto;">
+    <header class="clearfix">
 
-      <a href="<%= imgSrc %>" style="float:left">View Original</a>
+      <h1><a href="/">drop<span>up</span></a></h1>
 
-      <div class="label">
-        <label for="embed">embed:</label>
-        <input type="text" id="embed" />
-      </div>
+      <a href="<%= imgSrc %>" id="original">View Original</a>
 
-    </div>
+    </header>
     
-    <hr />
-
     <div style="margin-left:10px;">    
       <img src="<%= imgSrc %>" />
     </div>
 
-    <script>
-      document.getElementById("embed").setAttribute("value", 
-        "<img src=\"" + document.location.protocol + "//" + document.location.host +
-        "<%= imgSrc %>\" />"); 
-    </script>
+    <script src="/jquery-1.4.2.min.js"></script>
 
   </body>
 </html>

@@ -3,14 +3,33 @@
   <head>
     <meta charset="utf-8" />
     <title>dropup</title>    
+    <link rel="stylesheet" href="/ChunkFive/stylesheet.css" />
     <link rel="stylesheet" href="/screen.css" />
   </head>
 
   <body>
+
+    <header class="clearfix">
+      <h1><a href="/">drop<span>up</span></a></h1>
+    </header>
+
+    <div id="wrapper">
+
+      <p>
+        The simplest way to share images, just drag and drop your images 
+        onto this page.
+      </p>
+      
+      <ul id="target" class="clearfix"></ul>
+      
+      <p id="warnings">
+        * Images are public, and will be deleted after 24 hours
+      </p>
+
+    </div>
     
-    <ul id="target"></ul>
-
-    <script src="client.dropup.js"></script>
-
+    <script src="/jquery-1.4.2.min.js"></script>
+    <script src="/client.dropup.js"></script>
+    
   </body>
 </html>

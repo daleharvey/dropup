@@ -15,17 +15,14 @@ var DropUp = (function() {
 				}
 			}
 		}, false);
-		
-		upload.addEventListener("load", function(event) {
-			li.className = "loaded";
-            console.log("f", xhr.responseText);
-		}, false);
-		
-		upload.addEventListener("error", function (error) {
-			console.log("error: " + error.code);
-		}, false);
+				
+        // TODO
+		upload.addEventListener("error", function (error) { }, false);
 
         xhr.onload = function(event) { 
+
+			li.className = "loaded";
+
             desc.innerHTML = "<a href='/" + xhr.responseText + ".html'>" + 
                 xhr.responseText + "</a>";
         };        
@@ -63,10 +60,10 @@ var DropUp = (function() {
 
         progress.style.width = "50%";
 		
-		// getBinaryDataReader.addEventListener("loadend", function(evt) {
-        //     startUpload(file, evt.target.result, li, desc, progress);
-        // }, false);
-		// getBinaryDataReader.readAsBinaryString(file);
+		getBinaryDataReader.addEventListener("loadend", function(evt) {
+            startUpload(file, evt.target.result, li, desc, progress);
+        }, false);
+		getBinaryDataReader.readAsBinaryString(file);
     };
     
     function drop(e) { 
