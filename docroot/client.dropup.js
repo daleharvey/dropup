@@ -58,7 +58,7 @@ var DropUp = (function() {
         loading.appendChild(progress);				
 		target.appendChild(li);
 
-        progress.style.width = "50%";
+        progress.style.width = "0%";
 		
 		getBinaryDataReader.addEventListener("loadend", function(evt) {
             startUpload(file, evt.target.result, li, desc, progress);

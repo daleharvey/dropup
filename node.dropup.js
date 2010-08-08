@@ -34,7 +34,7 @@ var DropUp = (function() {
 
     function out(req, res) { 
         routes.route(req, res, [
-            ["^/$", function() { serveFile(res, "/index.html"); }],
+            ["^/$", function() { serveFile(req, res, "/index.html"); }],
             ["^/upload$",                  uploadFile],
             ["^/([a-z0-9]{12}.png.html)$", serveImgPage],
             ["^/([a-z0-9]{12}).png$",      serveImg],
@@ -43,7 +43,7 @@ var DropUp = (function() {
     };
 
     function serveStatic(req, res, rest) { 
-        serveFile(res, req.url);
+        serveFile(req, res, req.url);
     };
 
     function serveImg(req, res) { 
@@ -103,13 +103,19 @@ var DropUp = (function() {
     	res.end();
     };
     
-    function serveFile(res, uri) { 
+    function serveFile(req, res, uri) { 
         var filename = path.join(root, "docroot", uri);         
-        fs.readFile(filename, "binary", function(err, file) {
-    		res.writeHead(200);
-    		res.write(file, "binary");
-    		res.end();
-    	});
+        path.exists(filename, function (exists) {
+            if (exists) { 
+                fs.readFile(filename, "binary", function(err, file) {
+    		        res.writeHead(200);
+    		        res.write(file, "binary");
+    		        res.end();
+                });
+            } else {
+                serve404(req, res);
+            }
+    	});               
     };
     
     function init() {
