@@ -61,3 +61,4 @@ a { text-decoration:none; color:orange; font-size:90%; }
 
 #embed { width: 300px; }
     
+.progress { height:100%; background:#BBB; }

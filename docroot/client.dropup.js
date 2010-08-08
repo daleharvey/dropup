@@ -47,6 +47,7 @@ var DropUp = (function() {
      		getBinaryDataReader = new FileReader();
 
         li.className      = "uploading";
+        progress.className = "progress";
         loading.className = "loading";
         div.className     = "wrapper";
 		
@@ -59,11 +60,13 @@ var DropUp = (function() {
         li.appendChild(desc);
         loading.appendChild(progress);				
 		target.appendChild(li);
+
+        progress.style.width = "50%";
 		
-		getBinaryDataReader.addEventListener("loadend", function(evt) {
-            startUpload(file, evt.target.result, li, desc, progress);
-        }, false);
-		getBinaryDataReader.readAsBinaryString(file);
+		// getBinaryDataReader.addEventListener("loadend", function(evt) {
+        //     startUpload(file, evt.target.result, li, desc, progress);
+        // }, false);
+		// getBinaryDataReader.readAsBinaryString(file);
     };
     
     function drop(e) { 
