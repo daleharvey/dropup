@@ -101,7 +101,7 @@ a { text-decoration:none; color:orange; font-size:90%; }
 
 #warnings { color:#666; font-size:80%; }
 
-.warning { vertical-align:middle; color: #666; }
+.error { position:absolute; top:0px; }
 
 .inactive { text-align:center; }
 

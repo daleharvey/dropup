@@ -16,15 +16,17 @@ var DropUp = (function() {
             }
         }, false);
                 
-        // TODO
-        upload.addEventListener("error", function (error) { }, false);
-
         xhr.onload = function(event) { 
-
-            $(li).addClass("loaded");
-
-            desc.innerHTML = "<a href='/" + xhr.responseText + ".html'>" + 
-                xhr.responseText + "</a>";
+            
+            if (xhr.status === 200) { 
+                $(li).addClass("loaded");
+                desc.innerHTML = "<a href='/" + xhr.responseText + ".html'>" + 
+                    xhr.responseText + "</a>";
+            } else { 
+                $(li).find(".loading").remove();
+                $(desc).addClass("error")
+                    .text("There was a problem uploading your file");
+            }
         };        
       
         xhr.open("POST", "/upload");
@@ -80,13 +82,13 @@ var DropUp = (function() {
             file = files[i];
 
             if (file.size > 1048576) {
-                $(target).append("<li class='item warning'>1MB Limit</li>");
+                $(target).append("<li class='item error'><p class='error'>1MB Limit</li></p>");
                 continue;
             }
 
             if (!file.type.match(/image.(png|jpg|jpeg)/)) { 
-                $(target).append("<li class='item warning'>Sorry, you can " + 
-                                 "only upload png files</li>");
+                $(target).append("<li class='item'><p class='error'>Sorry, you can " + 
+                                 "only upload png files</p></li>");
                 continue;
             }
 
