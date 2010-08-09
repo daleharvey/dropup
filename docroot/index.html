@@ -24,9 +24,17 @@
         <ul id="target" class="clearfix"></ul>
       </div>
       
-      <p id="warnings">
-        * Images are public, and will be deleted after 24 hours
-      </p>
+      <footer>
+
+        <span id="warnings">* Images will be deleted after 24 hours</span>
+        
+        <div id="links">
+          <a href="http://daleharvey.org">Developed By Dale Harvey</a> | 
+          <a href="http://github.com/daleharvey/dropup">Code on Github</a> | 
+          <a href="http://arandomurl.com">Blog</a>
+        </div>
+
+      </footer>
 
     </div>
     
@@ -44,8 +52,9 @@
           Modernizr.filereader && Modernizr.draganddrop) { 
          DropUp.init();
       } else { 
-        $("#dropzone").html("<p>Sorry, your browser is not supported</p>")
-          .addClass("inactive");
+         var msg = "<p>Sorry, dropup uses new web technologies that are <br />" + 
+           "only currently supported by firefox. :(</p>";
+         $("#dropzone").html(msg).addClass("inactive");
       }
     </script>
 

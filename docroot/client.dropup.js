@@ -50,6 +50,9 @@ var DropUp = (function() {
             if (xhr.status === 200) { 
 
                 $(li).addClass("loaded");
+                $(li).find(".wrapper a")
+                    .attr("href", xhr.responseText + ".html");
+
                 desc.innerHTML = 
                     "<a href='/" + xhr.responseText + ".html'>" + 
                     xhr.responseText + "</a>" + 
@@ -72,31 +75,18 @@ var DropUp = (function() {
 
     function fileLoaded(event) { 
 
-        var li                  = document.createElement('li'),
-            div                 = document.createElement('div'),
-            img                 = document.createElement('img'),
-            loading             = document.createElement('div'),
-            progress            = document.createElement('div'),
-            desc                = document.createElement('p'),
+        var $li                 = $(generateLi("")),
             file                = event.target.file,
-            getBinaryDataReader = new FileReader();
+            getBinaryDataReader = new FileReader(); 
 
-        li.className      = "item";
-        progress.className = "progress";
-        loading.className = "loading";
-        div.className     = "wrapper";
-        desc.className = "desc";        
-        desc.innerHTML = "uploading...";
+        var li       = $li.get(0), 
+            desc     = $li.find(".desc").get(0), 
+            progress = $li.find(".progress").get(0);
 
-        img.src = event.target.result;
-        div.appendChild(img);
-        li.appendChild(div);
-        li.appendChild(loading);
-        li.appendChild(desc);
-        loading.appendChild(progress);              
-        target.appendChild(li);
-
+        $li.find("img").attr("src", event.target.result);
         progress.style.width = "0%";
+
+        $(target).append($li);
         
         getBinaryDataReader.addEventListener("loadend", function(evt) {
             startUpload(file, evt.target.result, li, desc, progress);
@@ -139,6 +129,22 @@ var DropUp = (function() {
         }
     };
 
+    function generateLi(path) {
+
+        var loadText  = path ? path : "Uploading ...",
+            loadClass = path ? "loaded" : "",
+            imgSrc    = path ? "src=\"/" + path + "\"": "",
+            imgHref   = path ? "href=\"/" + path + "\"": "",
+            imgHtml   = path ? "href=\"/" + path + ".html\"" : "";
+
+        return '<li class="item ' + loadClass + '">' + 
+            '<div class="wrapper">' + 
+            '<a ' + imgHtml + '><img ' + imgSrc + ' />' + '</a></div>' + 
+            '<div class="loading"><div class="progress"></div></div>' +
+            '<p class="desc"><a ' + imgHtml + '>' + loadText + '</a>' + 
+            '<a class="remove" data-path="' + path + '">remove</a></p></li>';
+    };
+
     function doNothing(e) {  
         e.stopPropagation();  
         e.preventDefault();  
@@ -148,11 +154,7 @@ var DropUp = (function() {
         var i, len, html = "";
         for (i = 0, len = stored.length; i < len; i += 1) {
             path = stored[i].path;
-            html += '<li class="item loaded"><div class="wrapper">' + 
-                '<img src="/' + path + '" /></div><p class="desc">' +
-                '<a href="/' + path + '.html">' + path + '</a>' +
-                '<a class="remove" data-path="' + path + 
-                '">remove</a></p></li>';
+            html += generateLi(path);
         }
         target.innerHTML = html;
     };
@@ -160,7 +162,9 @@ var DropUp = (function() {
     function removeClicked(e) { 
         if (e.target.className === "remove") { 
             removeFromStorage(e.target.getAttribute("data-path"));
-            displayStored();
+            $(e.target).parents(".item").fadeOut("medium", function() {
+                $(this).remove();
+            });
         }
     };
 
