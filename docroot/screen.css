@@ -36,12 +36,15 @@ ul {
 }
 .item {
     padding:5px; 
-    background:#111; 
+    background:#555; 
     float:left;
     margin:5px 5px 0px 0px; 
     width:200px;
     height:155px;
     position:relative; 
+}
+.item:hover { 
+    background:#444;
 }
 .item img { 
     vertical-align:middle;
@@ -52,7 +55,8 @@ ul {
 
 .desc { position:relative; }
 .remove { position:absolute; right:0px; top:5px; font-size:80%; 
-          color:#666; cursor:pointer; }
+          color:#222; cursor:pointer; }
+.remove:hover { color:#000; }
 /* .item {  */
 /*     text-align:center; */
 /* } */
@@ -71,7 +75,7 @@ ul {
     height:5px; 
 }
 
-#dropzone { background:#666; min-height:170px; padding-left:5px; padding-bottom: 5px;}
+#dropzone { background:#222; min-height:170px; padding-left:5px; padding-bottom: 5px;}
 
 .loaded img { opacity:1; }
 .loaded .loading { display:none; }
