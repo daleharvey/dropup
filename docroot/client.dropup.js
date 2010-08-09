@@ -84,11 +84,11 @@ var DropUp = (function() {
                 continue;
             }
 
-            // if (!file.type.match(/image.png/)) { 
-            //     $(target).append("<li class='item warning'>Sorry, you can " + 
-            //                      "only upload png files</li>");
-            //     continue;
-            // }
+            if (!file.type.match(/image.(png|jpg|jpeg)/)) { 
+                $(target).append("<li class='item warning'>Sorry, you can " + 
+                                 "only upload png files</li>");
+                continue;
+            }
 
             reader = new FileReader();
             reader.index = i;
