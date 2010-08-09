@@ -9,18 +9,20 @@
 
   <body>
 
-    <header class="clearfix">
-      <h1><a href="/">drop<span>up</span></a></h1>
-    </header>
+    <div id="indexwrapper">
 
-    <div id="wrapper">
-
+      <header class="clearfix">
+        <h1><a href="/">drop<span>up</span></a></h1>
+      </header>
+      
       <p>
         The simplest way to share images, just drag and drop your images 
         onto this page.
       </p>
       
-      <ul id="target" class="clearfix"></ul>
+      <div id="dropzone">
+        <ul id="target" class="clearfix"></ul>
+      </div>
       
       <p id="warnings">
         * Images are public, and will be deleted after 24 hours
@@ -29,7 +31,23 @@
     </div>
     
     <script src="/jquery-1.4.2.min.js"></script>
+    <script src="/modernizr-1.5.min.js"></script>
     <script src="/client.dropup.js"></script>
     
+    <script>
+
+      Modernizr.addTest('filereader', function() {
+         return typeof window.FileReader === "function";
+      });
+      
+      if (Modernizr.filereader && Modernizr.draganddrop) { 
+         DropUp.init();
+      } else { 
+        $("#dropzone").html("<p>Sorry, your browser is not supported</p>")
+          .addClass("inactive");
+      }
+    </script>
+
+
   </body>
 </html>

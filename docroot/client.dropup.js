@@ -21,7 +21,7 @@ var DropUp = (function() {
 
         xhr.onload = function(event) { 
 
-			li.className = "loaded";
+            $(li).addClass("loaded");
 
             desc.innerHTML = "<a href='/" + xhr.responseText + ".html'>" + 
                 xhr.responseText + "</a>";
@@ -43,7 +43,7 @@ var DropUp = (function() {
 		    file                = event.target.file,
      		getBinaryDataReader = new FileReader();
 
-        li.className      = "uploading";
+        li.className      = "item";
         progress.className = "progress";
         loading.className = "loading";
         div.className     = "wrapper";
@@ -68,7 +68,7 @@ var DropUp = (function() {
     
     function drop(e) { 
 
-        var i, len, files;
+        var i, len, files, file;
 
         e.stopPropagation();  
         e.preventDefault();  
@@ -76,16 +76,26 @@ var DropUp = (function() {
         files = e.dataTransfer.files;  
 
 		for (i = 0; i < files.length; i++) {
-			if(files[i].size < 1048576) {
-				reader = new FileReader();
-				reader.index = i;
-				reader.file = files[i];
-				
-				reader.addEventListener("loadend", fileLoaded, false);
-				reader.readAsDataURL(files[i]);
-			} else {
-				alert("file is too big, needs to be below 1mb");
-			}
+            
+            file = files[i];
+
+			if (file.size > 1048576) {
+                $(target).append("<li class='item warning'>1MB Limit</li>");
+                continue;
+            }
+
+            if (!file.type.match(/image.png/)) { 
+                $(target).append("<li class='item warning'>Sorry, you can " + 
+                                 "only upload png files</li>");
+                continue;
+            }
+
+			reader = new FileReader();
+			reader.index = i;
+			reader.file = file;
+			
+			reader.addEventListener("loadend", fileLoaded, false);
+			reader.readAsDataURL(file);
 		}
     };
 
@@ -104,6 +114,3 @@ var DropUp = (function() {
         "init":init
     };
 })();
-
-
-DropUp.init();

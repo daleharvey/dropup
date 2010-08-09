@@ -1,11 +1,20 @@
-#!/bin/sh
+#!/bin/bash
 
-trap "killall node" exit INT TERM
+NODESCRIPT="node.dropup.js"
+EXCLUDE="upload"
 
-node node.dropup.js &
+startNode() {
+    node $NODESCRIPT &
+    echo "New Node $!"
+    PID=$! 
+}
 
-while inotifywait -r -e modify $(pwd); do
-    echo "Burn and Die"
-    killall node
-    node node.dropup.js &
+trap "kill -9 $PID" exit INT TERM
+
+startNode
+
+while inotifywait -r -q -e modify --exclude $EXCLUDE $(pwd); do
+    echo "killing $PID" 
+    kill -9 $PID
+    startNode
 done

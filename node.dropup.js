@@ -6,24 +6,9 @@ var http = require("http"),
 
 var formidable = require('formidable'),
     routes     = require('./node.routes'),
-    ejs        = require('ejs');
-
-var Util = {};
-
-Util.inArray = function(item, array) { 
-    for (var i = 0, len = array.length; i < len; i++) {
-        if (array[i] === item) { 
-            return true;
-        }
-    }
-    return false;
-};
-
-Util.randStr = function() {
-    return Math.floor(Math.random() * 2147483648).toString(36) + 
-        (Math.floor(Math.random() * 2147483648) ^ 
-         (new Date().getTime())).toString(36);
-};
+    ejs        = require('ejs'),
+    mime       = require("./mime.js"),
+    Util       = require("./util.js").Util;
 
 var DropUp = (function() {
 
@@ -38,7 +23,7 @@ var DropUp = (function() {
             ["^/upload$",                  uploadFile],
             ["^/([a-z0-9]{12}.png.html)$", serveImgPage],
             ["^/([a-z0-9]{12}).png$",      serveImg],
-            ["([\w\W]*)",                  serveStatic]
+            ["[\w\W]*",                    serveStatic]
         ]);
     };
 
@@ -108,7 +93,8 @@ var DropUp = (function() {
         path.exists(filename, function (exists) {
             if (exists) { 
                 fs.readFile(filename, "binary", function(err, file) {
-    		        res.writeHead(200);
+                    var headers = {"Content-Type": mime.lookup(filename)};
+    		        res.writeHead(200, headers);
     		        res.write(file, "binary");
     		        res.end();
                 });
