@@ -27,7 +27,7 @@ var DropUp = (function() {
             ["^/$", function() { serveFile(req, res, "/index.html"); }],
             ["^/upload$",                        uploadFile],
             ["^/([a-z0-9]*.(png|jpg).html)$",    serveImgPage],
-            ["^/([a-z0-9]*){5, 10}.(png|jpg)$",         serveImg],
+            ["^/([a-z0-9]*){5, 20}.(png|jpg)$",         serveImg],
             ["[\w\W]*",                          serveStatic]
         ]);
     };
