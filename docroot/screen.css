@@ -50,9 +50,12 @@ ul {
     opacity: 0.1; 
 }
 
-.item { 
-    text-align:center;
-}
+.desc { position:relative; }
+.remove { position:absolute; right:0px; top:5px; font-size:80%; 
+          color:#666; cursor:pointer; }
+/* .item {  */
+/*     text-align:center; */
+/* } */
 
 .wrapper { 
     text-align:center;  

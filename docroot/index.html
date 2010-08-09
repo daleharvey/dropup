@@ -40,7 +40,8 @@
          return typeof window.FileReader === "function";
       });
       
-      if (Modernizr.filereader && Modernizr.draganddrop) { 
+      if (Modernizr.localstorage && JSON && 
+          Modernizr.filereader && Modernizr.draganddrop) { 
          DropUp.init();
       } else { 
         $("#dropzone").html("<p>Sorry, your browser is not supported</p>")

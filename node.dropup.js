@@ -77,9 +77,7 @@ var DropUp = (function() {
             content += chunk;
         });
         
-
         req.addListener('end', function() {
-
 
             var name = Util.randStr() + "." + imgExt(content),
                 dest = path.join(root, "uploads", name);
@@ -92,7 +90,7 @@ var DropUp = (function() {
     };
 
     function serve503(req, res) { 
-        res.writeHead(404, {"Content-Type": "text/plain"});
+        res.writeHead(503, {"Content-Type": "text/plain"});
         res.write("Server Encountered an error\n");
         res.end();
     };
@@ -104,7 +102,7 @@ var DropUp = (function() {
     };
     
     function serveFile(req, res, uri) { 
-        var filename = path.join(root, "docroot", uri);         
+        var filename = path.join(root, "docroot", uri);
         path.exists(filename, function (exists) {
             if (exists) { 
                 fs.readFile(filename, "binary", function(err, file) {

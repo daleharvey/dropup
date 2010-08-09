@@ -1,6 +1,35 @@
 var DropUp = (function() {
     
-    var target = document.getElementById("target");    
+    var stored = localStorage.stored && JSON.parse(localStorage.stored) || [],
+        target = document.getElementById("target");    
+
+    function addToStorage(img) { 
+        stored.push({"path":img, "date":(new Date())});
+        localStorage.stored = JSON.stringify(stored);
+    };
+
+    function removeFromStorage(path) { 
+        var i, len, tmp = [];
+        for (i = 0, len = stored.length; i < len; i += 1) {
+            if (stored[i].path !== path) {
+                tmp.push(stored[i]);
+            }
+        }
+        stored = tmp;
+        localStorage.stored = JSON.stringify(stored);
+    };
+
+    function expireStored() {
+        var i, len, now = new Date().getTime(), tmp = [];
+        for (i = 0, len = stored.length; i < len; i += 1) {
+            var time = new Date(stored[i].date).getTime();
+            if ((now - time) < 86400000) { 
+                tmp.push(stored[i]);
+            }
+        }
+        stored = tmp;
+        localStorage.stored = JSON.stringify(stored);
+    };
 
     function startUpload(file, bin, li, desc, progress) {
 
@@ -19,9 +48,16 @@ var DropUp = (function() {
         xhr.onload = function(event) { 
             
             if (xhr.status === 200) { 
+
                 $(li).addClass("loaded");
-                desc.innerHTML = "<a href='/" + xhr.responseText + ".html'>" + 
-                    xhr.responseText + "</a>";
+                desc.innerHTML = 
+                    "<a href='/" + xhr.responseText + ".html'>" + 
+                    xhr.responseText + "</a>" + 
+                    "<a class='remove' data-path='" + xhr.responseText + 
+                    "'>remove</a>";
+
+                addToStorage(xhr.responseText);
+
             } else { 
                 $(li).find(".loading").remove();
                 $(desc).addClass("error")
@@ -49,7 +85,7 @@ var DropUp = (function() {
         progress.className = "progress";
         loading.className = "loading";
         div.className     = "wrapper";
-        
+        desc.className = "desc";        
         desc.innerHTML = "uploading...";
 
         img.src = event.target.result;
@@ -82,13 +118,15 @@ var DropUp = (function() {
             file = files[i];
 
             if (file.size > 1048576) {
-                $(target).append("<li class='item error'><p class='error'>1MB Limit</li></p>");
+                $(target).append("<li class='item error'><p class='error'>" +
+                                 "1MB Limit</li></p>");
                 continue;
             }
 
             if (!file.type.match(/image.(png|jpg|jpeg)/)) { 
-                $(target).append("<li class='item'><p class='error'>Sorry, you can " + 
-                                 "only upload png files</p></li>");
+                $(target).append("<li class='item'><p class='error'>Sorry, " +
+                                 "you can only upload png and jpg files" +
+                                 "</p></li>");
                 continue;
             }
 
@@ -106,7 +144,33 @@ var DropUp = (function() {
         e.preventDefault();  
     };
 
+    function displayStored() {
+        var i, len, html = "";
+        for (i = 0, len = stored.length; i < len; i += 1) {
+            path = stored[i].path;
+            html += '<li class="item loaded"><div class="wrapper">' + 
+                '<img src="/' + path + '" /></div><p class="desc">' +
+                '<a href="/' + path + '.html">' + path + '</a>' +
+                '<a class="remove" data-path="' + path + 
+                '">remove</a></p></li>';
+        }
+        target.innerHTML = html;
+    };
+
+    function removeClicked(e) { 
+        if (e.target.className === "remove") { 
+            removeFromStorage(e.target.getAttribute("data-path"));
+            displayStored();
+        }
+    };
+
     function init() {
+
+        expireStored();        
+        displayStored();
+        
+        target.addEventListener("mousedown", removeClicked, false);  
+
         document.addEventListener("dragenter", doNothing, false);  
         document.addEventListener("dragover", doNothing, false);  
         document.addEventListener("drop", drop, false);  
