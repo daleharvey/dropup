@@ -19,17 +19,17 @@ var DropUp = (function() {
 
     function out(req, res) { 
 
-        try {
-            routes.route(req, res, [
-                ["^/$", function() { serveFile(req, res, "/index.html"); }],
-                ["^/upload$",                  uploadFile],
-                ["^/([a-z0-9]{12}.png.html)$", serveImgPage],
-                ["^/([a-z0-9]{12}).png$",      serveImg],
-                ["[\w\W]*",                    serveStatic]
-            ]);
-        } catch(err) { 
-            serve503(req, res);
+        if (req.method === "HEAD") { 
+            res.write = function () {};
         }
+        
+        routes.route(req, res, [
+            ["^/$", function() { serveFile(req, res, "/index.html"); }],
+            ["^/upload$",                  uploadFile],
+            ["^/([a-z0-9]{12}.png.html)$", serveImgPage],
+            ["^/([a-z0-9]{12}).png$",      serveImg],
+            ["[\w\W]*",                    serveStatic]
+        ]);
     };
 
     function serveStatic(req, res, rest) { 
@@ -117,13 +117,18 @@ var DropUp = (function() {
     
     function init() {
 
+        process.on('uncaughtException', function (err) {
+            console.log('Caught exception: ' + err);
+        });
+        
         var tpl = path.join(root, "docroot", "img.html");
 
         fs.readFile(tpl, "binary", function(err, file) {
             imgTpl = file;
         });
-
+        
         console.log("Starting Server on http://" + ip + ":" + port + "/");
+        
         http.createServer(out).listen(port, ip);        
     };
 
