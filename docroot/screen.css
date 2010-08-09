@@ -29,11 +29,12 @@ p {
 }
  
 h1 { 
-    font-family : ChunkFiveRegular;
-    font-size   : 250%;
-    line-height : 120%;
-    text-shadow : #000 1px 1px 2px; 
-    float       : left;
+    font-family    : Arial, sans-serif;
+    letter-spacing :-2px;
+    font-size      : 250%;
+    line-height    : 120%;
+    text-shadow    : #000 1px 1px 2px; 
+    float          : left;
 }
 a { 
     text-decoration : none; 
