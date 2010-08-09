@@ -25,10 +25,10 @@ var DropUp = (function() {
         
         routes.route(req, res, [
             ["^/$", function() { serveFile(req, res, "/index.html"); }],
-            ["^/upload$",                  uploadFile],
-            ["^/([a-z0-9]{12}.png.html)$", serveImgPage],
-            ["^/([a-z0-9]{12}).png$",      serveImg],
-            ["[\w\W]*",                    serveStatic]
+            ["^/upload$",                        uploadFile],
+            ["^/([a-z0-9]{12}.(png|jpg).html)$", serveImgPage],
+            ["^/([a-z0-9]{12}).(png|jpg)$",      serveImg],
+            ["[\w\W]*",                          serveStatic]
         ]);
     };
 
@@ -40,7 +40,7 @@ var DropUp = (function() {
         var filename = path.join(root, "uploads", req.url);         
         fs.readFile(filename, "binary", function(err, file) {
             serveBin(res, file);
-    	});
+        });
     };
     
     function serveImgPage(req, res, path) {
@@ -53,50 +53,54 @@ var DropUp = (function() {
         }));
     };
 
-    function imgExt() { 
-        return "png";
-    };
-    
     function serveBin(res, bin) { 
-    	res.writeHead(200);
-    	res.write(bin, "binary");
-    	res.end();        
+        res.writeHead(200);
+        res.write(bin, "binary");
+        res.end();        
     };
     
     function isImage(path) { 
         return true;
     };
+
+    function imgExt(str) { 
+        return (str[1] + str[2] + str[3]) === "PNG" ? "png" : "jpg";
+    };
     
     function uploadFile(req, res) { 
 
-        var name = Util.randStr() + ".png",
-            dest = path.join(root, "uploads", name), 
-            content = '';
-
+        var content = '';
+        
         req.setEncoding("binary");
         
         req.addListener('data', function(chunk) {
-	        content += chunk;
-	    });
+            content += chunk;
+        });
         
-	    req.addListener('end', function() {
+
+        req.addListener('end', function() {
+
+
+            var name = Util.randStr() + "." + imgExt(content),
+                dest = path.join(root, "uploads", name);
+
             fs.writeFile(dest, content, "binary", function (err) {
-	            res.writeHead(200, {'content-type': 'text/plain'});
+                res.writeHead(200, {'content-type': 'text/plain'});
                 res.end(name);
             });
-	    });
+        });
     };
 
     function serve503(req, res) { 
         res.writeHead(404, {"Content-Type": "text/plain"});
-    	res.write("Server Encountered an error\n");
-    	res.end();
+        res.write("Server Encountered an error\n");
+        res.end();
     };
     
     function serve404(req, res) { 
         res.writeHead(404, {"Content-Type": "text/plain"});
-    	res.write("404 Not Found\n");
-    	res.end();
+        res.write("404 Not Found\n");
+        res.end();
     };
     
     function serveFile(req, res, uri) { 
@@ -105,14 +109,14 @@ var DropUp = (function() {
             if (exists) { 
                 fs.readFile(filename, "binary", function(err, file) {
                     var headers = {"Content-Type": mime.lookup(filename)};
-    		        res.writeHead(200, headers);
-    		        res.write(file, "binary");
-    		        res.end();
+                    res.writeHead(200, headers);
+                    res.write(file, "binary");
+                    res.end();
                 });
             } else {
                 serve404(req, res);
             }
-    	});               
+        });               
     };
     
     function init() {
