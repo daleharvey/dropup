@@ -18,13 +18,18 @@ var DropUp = (function() {
         port   = 8124;
 
     function out(req, res) { 
-        routes.route(req, res, [
-            ["^/$", function() { serveFile(req, res, "/index.html"); }],
-            ["^/upload$",                  uploadFile],
-            ["^/([a-z0-9]{12}.png.html)$", serveImgPage],
-            ["^/([a-z0-9]{12}).png$",      serveImg],
-            ["[\w\W]*",                    serveStatic]
-        ]);
+
+        try {
+            routes.route(req, res, [
+                ["^/$", function() { serveFile(req, res, "/index.html"); }],
+                ["^/upload$",                  uploadFile],
+                ["^/([a-z0-9]{12}.png.html)$", serveImgPage],
+                ["^/([a-z0-9]{12}).png$",      serveImg],
+                ["[\w\W]*",                    serveStatic]
+            ]);
+        } catch(err) { 
+            serve503(req, res);
+        }
     };
 
     function serveStatic(req, res, rest) { 
@@ -80,6 +85,12 @@ var DropUp = (function() {
                 res.end(name);
             });
 	    });
+    };
+
+    function serve503(req, res) { 
+        res.writeHead(404, {"Content-Type": "text/plain"});
+    	res.write("Server Encountered an error\n");
+    	res.end();
     };
     
     function serve404(req, res) { 
