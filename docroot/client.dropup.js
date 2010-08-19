@@ -107,7 +107,7 @@ var DropUp = (function() {
             
             file = files[i];
 
-            if (file.size > (1048576 * %)) {
+            if (file.size > (1048576 * 5)) {
                 $(target).append("<li class='item'><p class='error'>" +
                                  "5MB Limit</li></p>");
                 continue;
