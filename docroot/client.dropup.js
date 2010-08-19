@@ -107,9 +107,9 @@ var DropUp = (function() {
             
             file = files[i];
 
-            if (file.size > 1048576) {
-                $(target).append("<li class='item error'><p class='error'>" +
-                                 "1MB Limit</li></p>");
+            if (file.size > (1048576 * %)) {
+                $(target).append("<li class='item'><p class='error'>" +
+                                 "5MB Limit</li></p>");
                 continue;
             }
 
@@ -170,7 +170,7 @@ var DropUp = (function() {
 
     function init() {
 
-        expireStored();        
+        //expireStored();        
         displayStored();
         
         target.addEventListener("mousedown", removeClicked, false);  
