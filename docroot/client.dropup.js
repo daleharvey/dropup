@@ -69,8 +69,15 @@ var DropUp = (function() {
         };        
       
         xhr.open("POST", "/upload");
-        xhr.overrideMimeType('text/plain; charset=x-user-defined-binary');
-        xhr.sendAsBinary(bin)
+
+        xhr.setRequestHeader('Content-Type', 'multipart/form-data');
+        xhr.setRequestHeader('X-File-Name', file.fileName);
+        xhr.setRequestHeader('X-File-Size', file.fileSize);
+        xhr.setRequestHeader('X-File-Type', file.type); //add additional header
+        xhr.send(file);
+
+        //xhr.overrideMimeType('text/plain; charset=x-user-defined-binary');
+        //xhr.sendAsBinary(bin)
     };
 
     function fileLoaded(event) { 
@@ -87,10 +94,17 @@ var DropUp = (function() {
         progress.style.width = "0%";
 
         $(target).append($li);
-        
-        getBinaryDataReader.addEventListener("loadend", function(evt) {
+
+        var f = function(evt) {
             startUpload(file, evt.target.result, li, desc, progress);
-        }, false);
+        };
+        
+        if (!hasStupidChromeBug()) {
+            getBinaryDataReader.addEventListener("loadend", f, false);
+        } else {
+            getBinaryDataReader.onload = f;
+        }
+
         getBinaryDataReader.readAsBinaryString(file);
     };
     
@@ -124,9 +138,18 @@ var DropUp = (function() {
             reader.index = i;
             reader.file = file;
             
-            reader.addEventListener("loadend", fileLoaded, false);
+            if (!hasStupidChromeBug()) {
+                reader.addEventListener("loadend", fileLoaded, false);
+            } else {
+                reader.onload = fileLoaded;
+            }
+            //reader.addEventListener("loadend", fileLoaded, false);
             reader.readAsDataURL(file);
         }
+    };
+
+    function hasStupidChromeBug() { 
+        return typeof(FileReader.prototype.addEventListener) !== "function";
     };
 
     function generateLi(path) {
