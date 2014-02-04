@@ -124,6 +124,14 @@ var DropUp = (function() {
             console.log('Caught exception: ' + err);
         });
         
+        // Ensure that the uploads directory exists
+        var uploaddirname = path.join(root, "uploads");
+        fs.readdir(uploaddirname, function(err, files) {
+        	if (err) {
+        		fs.mkdirSync(uploaddirname, 0755);
+        	}
+        });
+        
         var tpl = path.join(root, "docroot", "img.html");
 
         fs.readFile(tpl, "binary", function(err, file) {
